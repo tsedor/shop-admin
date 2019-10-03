@@ -1,6 +1,6 @@
 import { LoginActionTypes, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS } from './types';
 
-export function loginRequest(login: string): LoginActionTypes {
+export function loginRequest(login: string, password: string): LoginActionTypes {
   return {
     type: LOGIN_REQUEST,
     login
