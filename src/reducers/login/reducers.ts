@@ -1,5 +1,5 @@
 import { LoginState } from "../types";
-import { LoginActionTypes, LOGIN_FAILURE, LOGIN_REQUEST } from "./types";
+import { LoginActionTypes, CLEAN_ERROR, LOGIN_FAILURE, LOGIN_REQUEST } from "./types";
 
 const initialState: LoginState = {
   requested: false,
@@ -13,6 +13,11 @@ export function loginReducer(
   action: LoginActionTypes
 ): LoginState {
   switch (action.type) {
+    case CLEAN_ERROR: 
+      return {
+        ...state,
+        error: ''
+      }
     case LOGIN_REQUEST:
       return {
         ...state,

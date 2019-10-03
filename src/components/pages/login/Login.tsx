@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, FormGroup, InputGroup, Tooltip } from '@blueprintjs/core';
+import { Alert, Button, FormGroup, InputGroup, Tooltip } from '@blueprintjs/core';
 import { AppState } from '../../../reducers';
-import { LOGIN_REQUEST } from '../../../reducers/login/types';
+import { LOGIN_REQUEST, CLEAN_ERROR } from '../../../reducers/login/types';
 
 const LoginContainer = styled.div`
   align-items: center;
@@ -29,6 +29,7 @@ const Login: React.FC = () => {
     console.log(loginMin3)
   }
   const loginRequested = useSelector((state: AppState) => state.loginReducer.requested);
+  const error = useSelector((state: AppState) => state.loginReducer.error);
   const lockButton = (
     <Tooltip content={`${showPassword ? "Ukryj" : "Pokaż"} hasło`}>
       <Button icon={showPassword ? "unlock" : "lock"}  onClick={() => togglePass(!showPassword)}></Button>
@@ -36,6 +37,9 @@ const Login: React.FC = () => {
   )
   return (
     <LoginContainer>
+      <Alert isOpen={error ? true : false} onClose={() => dispatch({type: CLEAN_ERROR})}>
+        Wystąpił nieoczekiwany błąd, spróbuj później.<br />{error}
+      </Alert>
       <StyledFormGroup helperText={loginMin3 && "zbyt krótki login"} intent="danger" label="Login" labelFor="login">
         <InputGroup id="login" value={login} onChange={(event: any) => changeLogin(event.target.value)} onBlur={(event: any) => checkLogin(login)} />
       </StyledFormGroup>
