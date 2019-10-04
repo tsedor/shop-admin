@@ -3,7 +3,8 @@ import { LoginActionTypes, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS } from '.
 export function loginRequest(login: string, password: string): LoginActionTypes {
   return {
     type: LOGIN_REQUEST,
-    login
+    login,
+    password
   }
 }
 

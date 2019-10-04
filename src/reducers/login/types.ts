@@ -7,9 +7,10 @@ interface CleanError {
   type: typeof CLEAN_ERROR
 }
 
-interface LoginRequest {
+export interface LoginRequest {
   type: typeof LOGIN_REQUEST,
-  login: string
+  login: string,
+  password: string
 }
 
 interface LoginFailure {

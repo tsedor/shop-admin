@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Alert, Button, FormGroup, InputGroup, Tooltip } from '@blueprintjs/core';
 import { AppState } from '../../../reducers';
 import { LOGIN_REQUEST, CLEAN_ERROR } from '../../../reducers/login/types';
@@ -22,7 +23,8 @@ const StyledFormGroup = styled(FormGroup)`
 const Login: React.FC = () => {
   const dispatch = useDispatch();
   const [ showPassword, togglePass ] = useState(false);
-  const [ login, changeLogin ] = useState("ds");
+  const [ login, changeLogin ] = useState("");
+  const [ password, changePassword ] = useState("");
   const [ loginMin3, changeLoginMin3 ] = useState(false);
   const checkLogin = (value: string) => {
     value.length < 3 ? changeLoginMin3(true) : changeLoginMin3(false);
@@ -30,13 +32,15 @@ const Login: React.FC = () => {
   }
   const loginRequested = useSelector((state: AppState) => state.loginReducer.requested);
   const error = useSelector((state: AppState) => state.loginReducer.error);
+  const loggedIn = useSelector((state: AppState) => state.loginReducer.loggedIn);
   const lockButton = (
     <Tooltip content={`${showPassword ? "Ukryj" : "Pokaż"} hasło`}>
       <Button icon={showPassword ? "unlock" : "lock"}  onClick={() => togglePass(!showPassword)}></Button>
     </Tooltip>
   )
   return (
-    <LoginContainer>
+    <LoginContainer onKeyDown={(event: any) => {event.keyCode === 13 && dispatch({type: LOGIN_REQUEST, login, password})}}>
+      {loggedIn && <Redirect to="/" />}
       <Alert isOpen={error ? true : false} onClose={() => dispatch({type: CLEAN_ERROR})}>
         Wystąpił nieoczekiwany błąd, spróbuj później.<br />{error}
       </Alert>
@@ -44,9 +48,9 @@ const Login: React.FC = () => {
         <InputGroup id="login" value={login} onChange={(event: any) => changeLogin(event.target.value)} onBlur={(event: any) => checkLogin(login)} />
       </StyledFormGroup>
       <StyledFormGroup label="Hasło" labelFor="password">
-        <InputGroup id="password" rightElement={lockButton} type={showPassword ? "text" : "password"} />
+        <InputGroup id="password" value={password} onChange={(event: any) => changePassword(event.target.value)} rightElement={lockButton} type={showPassword ? "text" : "password"} />
       </StyledFormGroup>
-      <Button rightIcon="log-in" loading={loginRequested} onClick={() => dispatch({type: LOGIN_REQUEST})}>Zaloguj</Button>
+      <Button rightIcon="log-in" loading={loginRequested} onClick={() => dispatch({type: LOGIN_REQUEST, login, password})}>Zaloguj</Button>
     </LoginContainer>
   )
 }
